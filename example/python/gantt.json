@@ -1,0 +1,32 @@
+[
+	{
+		"event": "event1",
+		"start": [2021, 1, 1],
+		"end": [2022, 1, 1],
+		"reference": "category1"
+	},
+	{
+		"event": "event2",
+		"start": [2021, 2, 2],
+		"end": [2021, 3, 3],
+		"reference": "category2"
+	},
+	{
+		"event": "event3",
+		"start": [2021, 4, 1],
+		"end": [2021, 7, 5],
+		"reference": "category2"
+	},
+	{
+		"event": "event4",
+		"start": [2022, 2, 2],
+		"end": [2021, 8, 7],
+		"reference": "category3"
+	},
+	{
+		"event": "event5",
+		"start": [2021, 1, 2],
+		"end": [2021, 3, 5],
+		"reference": "category4"
+	}
+]

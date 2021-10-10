@@ -1,0 +1,7 @@
+/.mypy_cache
+/graphs.egg-info
+node_modules
+unused
+
+.DS_Store
+Pipfile.lock

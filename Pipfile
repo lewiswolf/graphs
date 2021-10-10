@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+kaleido = "*"
+numpy = "*"
+pandas = "*"
+plotly = "*"
+
+[dev-packages]
+flake8 = "*"
+flake8-commas = "*"
+graphs = {editable = true, path = "."}
+mypy = "*"
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+install-dev = "sh bin/install-dev.sh"
+js = "sh bin/runjs.sh"
+py = "python example/python/main.py"
+test = "sh bin/test.sh"
+
