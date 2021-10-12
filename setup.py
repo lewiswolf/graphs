@@ -9,7 +9,7 @@ version = '0.0.1'
 short_description = 'Graphs in Python. Graphs in JavaScript. Graphs in LaTeX.'
 
 # import long description from readme.md
-with codecs.open(os.path.join(this, 'README.md'), encoding='utf-8') as rm:
+with codecs.open(os.path.join(this, 'readme.md'), encoding='utf-8') as rm:
 	long_description = '\n' + rm.read()
 
 # import packages from Pipfile
