@@ -1,7 +1,7 @@
 # core
 import codecs
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 this = os.path.abspath(os.path.dirname(__file__))
 name = 'graphs'
@@ -42,7 +42,7 @@ setup(
 	description=short_description,
 	long_description_content_type='text/markdown',
 	long_description=long_description,
-	packages=find_packages(),
+	packages=['graphs'],
 	install_requires=packages,
 	package_data={'graphs': ['py.typed']},
 	keywords=['graphs'],
