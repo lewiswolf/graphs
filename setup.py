@@ -44,6 +44,7 @@ setup(
 	long_description=long_description,
 	packages=find_packages(),
 	install_requires=packages,
+	package_data={'graphs': ['py.typed']},
 	keywords=['graphs'],
 	classifiers=[
 		'Programming Language :: Python :: 3',
