@@ -13,7 +13,7 @@ import plotly.graph_objects as go	# more plots
 # lib
 from . import types as T
 from . import utils
-__all__ = ['GanttChart', 'Plot2DMatrix', 'PlotPolygon', 'PlotVertices']
+__all__ = ['GanttChart', 'PlotMatrix', 'PlotPolygon', 'PlotVertices']
 
 
 class GanttChart(T.Graph):
@@ -79,9 +79,9 @@ class GanttChart(T.Graph):
 		return fig
 
 
-class Plot2DMatrix(T.Graph):
+class PlotMatrix(T.Graph):
 	'''
-	Render a stylised plot of a 2D matrix from a 2D numpy array.
+	Render a stylised plot of a matrix from a 1D or 2D numpy array.
 	'''
 
 	def __init__(self, m: Optional[npt.NDArray[np.float64]] = None, settings: T.GraphSettings = {}) -> None:
@@ -100,7 +100,13 @@ class Plot2DMatrix(T.Graph):
 		'''
 
 		# type check input
-		assert m.ndim == 2
+		dim = m.ndim
+		if dim < 3:
+			ValueError('PlotMatrix only supports 1D and 2D inputs.')
+
+		# resize input
+		if dim == 1:
+			m = np.array([m.tolist() for _ in range(m.shape[0])])
 
 		# create figure
 		fig = px.imshow(
@@ -110,13 +116,23 @@ class Plot2DMatrix(T.Graph):
 		)
 
 		# configure layout
-		longest_side = max(*m.shape)
-		fig.update_layout(
-			height=(550 * (m.shape[0] / longest_side)),
-			width=(550 * (m.shape[1] / longest_side)) + 150,
-		)
 		fig.update_xaxes(showticklabels=False)
 		fig.update_yaxes(showticklabels=False)
+
+		if dim == 1:
+			fig.update_layout(
+				height=550,
+				width=550 + (150 if self.settings['show_colorbar'] else 0),
+			)
+
+		elif dim == 2:
+			# preserve the aspect ratio of matrix.
+			longest_side = max(*m.shape)
+			fig.update_layout(
+				height=(550 * (m.shape[0] / longest_side)),
+				width=(550 * (m.shape[1] / longest_side)) + (150 if self.settings['show_colorbar'] else 0),
+			)
+
 		return fig
 
 

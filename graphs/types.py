@@ -1,4 +1,5 @@
 # core
+from abc import ABC, abstractmethod
 import os
 import random
 from typing import Any, Literal, TypedDict
@@ -7,7 +8,7 @@ from typing import Any, Literal, TypedDict
 from plotly.graph_objects import Figure
 
 
-__all__ = ['Figure', 'GanttEvent', 'Graph', 'GraphSettings']
+__all__ = ['Animation', 'Figure', 'GanttEvent', 'Graph', 'GraphSettings']
 
 
 class GanttEvent(TypedDict, total=False):
@@ -37,7 +38,7 @@ class GraphSettings(TypedDict, total=False):
 	emphasis_color: str			# secondary color used for accenting (hex eg. '#ffffff')
 	font_family: str			# Which font family?
 	font_size: int				# what's the global font size?
-	# heading_size: int			# what's the font size for a heading/title?
+	show_colorbar: bool			# should the colorbar be visible?
 	# export options
 	export_path: str			# if the graph is being exported, where should it go? (relative path)
 	image_size: int				# the length of the largest side of an exported image (pixels)
@@ -45,13 +46,14 @@ class GraphSettings(TypedDict, total=False):
 		'',
 		'png',
 		'svg',
+		'mov',
 		# 'html',
 	]
 	# plotly config
-	config: dict[str, Any]		# a clone of the fig.show() parameter config
+	config: dict[str, Any]		# a clone of the fig.show() parameter `config`
 
 
-class Graph():
+class BaseGraph(ABC):
 	'''
 	'''
 
@@ -65,7 +67,7 @@ class Graph():
 			'emphasis_color': '#126B21',
 			'font_family': 'Computer Modern',
 			'font_size': 18,
-			# 'heading_size': 20,
+			'show_colorbar': True,
 			# export options
 			'export_path': f'{random.getrandbits(64):16x}',
 			'image_size': 1200,
@@ -78,6 +80,39 @@ class Graph():
 				'staticPlot': False,
 			},
 		}
+
+	def updateSettings(self, settings: GraphSettings) -> None:
+		'''
+		A type safe way to update self.settings.
+		'''
+		self.settings.update(settings)
+
+	@abstractmethod
+	def render(
+		self,
+		fig: Figure,
+		export_path: str = '',
+	) -> None:
+		pass
+
+
+class Animation(BaseGraph):
+	'''
+	'''
+
+	def render(
+		self,
+		fig: Figure,
+		export_path: str = '',
+	) -> None:
+		'''
+		'''
+		pass
+
+
+class Graph(BaseGraph):
+	'''
+	'''
 
 	def render(
 		self,
@@ -94,6 +129,9 @@ class Graph():
 		# use default export path if a new was not provided.
 		if not export_path:
 			export_path = self.settings['export_path']
+		abs_path = os.path.normpath(
+			f'{os.getcwd()}/{export_path}.{self.settings["output_type"]}',
+		)
 
 		# apply global layout settings
 		fig.update_layout(
@@ -103,30 +141,32 @@ class Graph():
 			},
 			margin={'t': 0, 'r': 0, 'b': 0, 'l': 0},
 		)
+		fig.update_coloraxes(
+			colorbar_len=1,
+			colorbar_ypad=0,
+			showscale=self.settings['show_colorbar'],
+		)
 
 		# handle image export
-		if self.settings['output_type']:
+		if self.settings['output_type'] == 'png':
 			# make all images the same size
-			if self.settings['output_type'] == 'png':
-				height = fig.layout['height'] or 500
-				width = fig.layout['width'] or 700
-				font = round(self.settings['font_size'] * (self.settings['image_size'] / max(height, width)))
-				fig.update_layout(
-					height=round(self.settings['image_size'] * (1.0 if height > width else height / width)),
-					width=round(self.settings['image_size'] * (1.0 if width > height else width / height)),
-					font={'size': font},
-				)
-			# export
-			fig.write_image(os.path.normpath(
-				f'{os.getcwd()}/{export_path}.{self.settings["output_type"]}',
-			))
+			height = fig.layout['height'] or 500
+			width = fig.layout['width'] or 700
+			font = round(self.settings['font_size'] * (self.settings['image_size'] / max(height, width)))
+			fig.update_layout(
+				height=round(self.settings['image_size'] * (1.0 if height > width else height / width)),
+				width=round(self.settings['image_size'] * (1.0 if width > height else width / height)),
+				font={'size': font},
+			)
+
+		if self.settings['output_type'] == 'png' or self.settings['output_type'] == 'svg':
+			# export both pngs and svgs
+			fig.write_image(abs_path)
+
+		# handle video export
+		if self.settings['output_type'] == 'mov':
+			raise ValueError(f'Exporting this figure as a ".{self.settings["output_type"]}" is not supported.')
 
 		# handle simple implementation
-		else:
+		if self.settings['output_type'] == '':
 			fig.show(config=self.settings['config'])
-
-	def updateSettings(self, settings: GraphSettings) -> None:
-		'''
-		A type safe way to update self.settings.
-		'''
-		self.settings.update(settings)

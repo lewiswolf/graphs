@@ -19,31 +19,31 @@ def ganntExample() -> None:
 	# Each Gantt chart event requires that we include a name, start date and end date. This will paint all Gantt events the
 	# same colour, as defined using the settings object.
 	e: T.GanttEvent = {
-		'event': 'test1',
+		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
 	}
 	# Alternatively, we can be explicit about our colours. This will produce a colour coded Gantt chart.
 	e = {
-		'event': 'test1',
+		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
 		'color': 'red',
 	}
 	# And we can of course give these colours a key, which will be displayed to the side of the graph.
 	e = {
-		'event': 'test1',
+		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
 		'color': 'red',
-		'reference': 'category1',
+		'reference': 'category_1',
 	}
-	# If only a reference is given, the colours will be determined by settings['colour_map'].
+	# If only a reference is given, the colours will be determined by settings['color_map'].
 	e = {
-		'event': 'test1',
+		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
-		'reference': 'category1',
+		'reference': 'category_1',
 	}
 	del e
 
@@ -57,8 +57,8 @@ def ganntExample() -> None:
 	GanttChart(
 		gantt_data,
 		settings={
+			'export_path': 'example/python/images/gantt-example-0',
 			'output_type': 'png',
-			'export_path': 'example/python/images/gantt-example-1',
 		},
 	)
 
@@ -69,7 +69,7 @@ def ganntExample() -> None:
 		{'event': 'test1', 'start': (2019, 9, 13), 'end': (2019, 9, 15)},
 		{'event': 'test2', 'start': (2019, 8, 9), 'end': (2019, 10, 11)},
 	])
-	g.render(fig, export_path='example/python/images/gantt-example-2')
+	g.render(fig, export_path='example/python/images/gantt-example-1')
 
 	# To save loading a new instance in the event that the settings need to be changed, you can also simply call:
 	g.updateSettings({'output_type': ''})
@@ -84,11 +84,20 @@ def matrixExample() -> None:
 	An example of plotting matrices.
 	'''
 
-	from graphs import Plot2DMatrix
+	from graphs import PlotMatrix
 
-	two_d = np.random.rand(10, 10)
-
-	Plot2DMatrix(two_d.reshape((20, 5)))
+	# PlotMatrix is designed to recognise the dimensionality of its input, and plot the respective matrix accordingly.
+	p = PlotMatrix(settings={'show_colorbar': False, 'output_type': 'png'})
+	# As a result of this, it is just as easy to plot a 1D matrix...
+	p.render(
+		p.createFigure(np.random.rand(100)),
+		export_path='example/python/images/1d-matrix-example',
+	)
+	# as it is to plot a 2D matrix.
+	p.render(
+		p.createFigure(np.random.rand(100, 100)),
+		export_path='example/python/images/2d-matrix-example',
+	)
 
 
 def polygonExample() -> None:
