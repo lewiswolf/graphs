@@ -130,25 +130,22 @@ class PlotMatrix(T.Graph):
 			m = m.reshape(1, m.shape[0])
 
 		# create figure
-		fig = go.Figure(
-			px.imshow(
-				m,
-				color_continuous_scale=self.settings['color_map'],
-				origin='lower',
-				**{
-					'x': np.arange(m.shape[1]),
-					'y': np.zeros(1),
-				} if dim == 1 else {},
-			),
-			# preseve aspect ratio if matrix is 2D
-			# TO FIX: The 1D graph does not look great, as plotly does not currently support a horizontal colorbar.
-			layout={
-				'height': 550 if dim == 1 else 550 * (m.shape[0] / max(*m.shape)),
-				'width': (700 if dim == 1 else 550 * (m.shape[1] / max(*m.shape))) + (150 if self.settings['show_colorbar'] else 0),
-			},
+		fig = px.imshow(
+			m,
+			color_continuous_scale=self.settings['color_map'],
+			origin='lower',
+			**{
+				'x': np.arange(m.shape[1]),
+				'y': np.zeros(1),
+			} if dim == 1 else {},
 		)
 
 		# configure axes and scale if dim == 1
+		fig.update_layout(
+			height=550 if dim == 1 else 550 * (m.shape[0] / max(*m.shape)),
+			width=(700 if dim == 1 else 550 * (m.shape[1] / max(*m.shape))) + (150 if self.settings['show_colorbar'] else 0),
+		)
+		# TO FIX: The 1D graph does not look great, as plotly does not currently support a horizontal colorbar.
 		fig.update_coloraxes(colorbar_len=1)
 		fig.update_xaxes(showticklabels=False, **{'scaleratio': (700 / 550) * 1 / m.shape[1]} if dim == 1 else {})
 		fig.update_yaxes(showticklabels=False, **{'scaleratio': m.shape[1]} if dim == 1 else {})
