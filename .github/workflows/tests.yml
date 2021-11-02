@@ -34,8 +34,13 @@ jobs:
               with:
                   python-version: "3.9"
 
-            - name: Install packange and mypy
+            - name: Install package and mypy
               run: pip install "git+https://github.com/lewiswolf/graphs.git#egg=graphs" mypy
 
-            - name: Type check
-              run: mypy --config-file=test/test.cfg setup.py graphs test example
+            - name: Type check (Windows only)
+              if: ${{ matrix.os == 'windows-latest' }}
+              run: mypy --config-file=test\test.cfg setup.py graphs test example
+
+            - name: Type check (Windows only)
+              if: ${{ matrix.os != 'windows-latest' }}
+              run: mypy --config-file=test\test.cfg setup.py graphs test example
