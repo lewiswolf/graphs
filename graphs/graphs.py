@@ -95,7 +95,7 @@ class GanttChart(T.Graph):
 		# configure layout
 		fig.update_layout(legend_title_text='', showlegend=show_legend, width=(900 if show_legend else 700))
 		fig.update_yaxes(autorange='reversed', title_text='')
-		return fig
+		return self.applySettings(fig)
 
 
 class PlotMatrix(T.Graph):
@@ -152,7 +152,7 @@ class PlotMatrix(T.Graph):
 		fig.update_coloraxes(colorbar_len=1)
 		fig.update_xaxes(showticklabels=False, **{'scaleratio': (700 / 550) * 1 / m.shape[1]} if dim == 1 else {})
 		fig.update_yaxes(showticklabels=False, **{'scaleratio': m.shape[1]} if dim == 1 else {})
-		return fig
+		return self.applySettings(fig)
 
 
 class PlotPolygon(T.Graph):
@@ -200,7 +200,7 @@ class PlotPolygon(T.Graph):
 		v_min, v_max = np.min(vertices) - 0.01, np.max(vertices) + 0.01
 		fig.update_xaxes(range=[v_min, v_max], showgrid=False, showticklabels=False, visible=False)
 		fig.update_yaxes(range=[v_min, v_max], showgrid=False, showticklabels=False, visible=False)
-		return fig
+		return self.applySettings(fig)
 
 
 class PlotSpectrogram(T.Graph):
@@ -292,7 +292,7 @@ class PlotSpectrogram(T.Graph):
 			width=700 + (120 if self.settings['show_colorbar'] else 0),
 		)
 
-		return fig
+		return self.applySettings(fig)
 
 
 class PlotVertices(T.Graph):
@@ -339,7 +339,7 @@ class PlotVertices(T.Graph):
 		v_min, v_max = np.min(vertices) - 0.02, np.max(vertices) + 0.02
 		fig.update_xaxes(range=[v_min, v_max])
 		fig.update_yaxes(range=[v_min, v_max])
-		return fig
+		return self.applySettings(fig)
 
 
 class PlotWaveform(T.Graph):
@@ -413,4 +413,4 @@ class PlotWaveform(T.Graph):
 			y=0.5,
 			yref='paper',
 		)
-		return fig
+		return self.applySettings(fig)
