@@ -50,7 +50,6 @@ class GraphSettings(TypedDict, total=False):
 		'png',
 		'svg',
 		'mov',
-		# 'html',
 	]
 	# plotly config
 	config: dict[str, Any]		# a clone of the fig.show() parameter `config`
@@ -58,6 +57,8 @@ class GraphSettings(TypedDict, total=False):
 
 class BaseGraph(ABC):
 	'''
+	Base Graph defines the global methods used to handle/manipulate the settings object,
+	as well as any abstract methods.
 	'''
 
 	settings: GraphSettings
@@ -102,22 +103,9 @@ class BaseGraph(ABC):
 		pass
 
 
-class Animation(BaseGraph):
-	'''
-	'''
-
-	def render(
-		self,
-		fig: Figure,
-		export_path: str = '',
-	) -> None:
-		'''
-		'''
-		pass
-
-
 class Graph(BaseGraph):
 	'''
+	This class is used by all static graphs, and includes a dedicated render method.
 	'''
 
 	def render(

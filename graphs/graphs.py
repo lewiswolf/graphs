@@ -242,6 +242,8 @@ class PlotSpectrogram(T.Graph):
 		sr: Optional[int] = None,
 	) -> T.Figure:
 		'''
+		This function renders a spectrogram using px.imshow. Depending on the type of spectrogram
+		being represented, the plot/axes are altered to best represent the data.
 		'''
 
 		# map x axis to frames or seconds
