@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 import os
 import random
-from typing import Any, Literal, TypedDict
+from typing import Any, Callable, Literal, TypedDict
 
 # dependencies
 from plotly.graph_objects import Figure
@@ -62,6 +62,7 @@ class BaseGraph(ABC):
 	'''
 
 	settings: GraphSettings
+	createFigure: Callable
 
 	def __init__(self) -> None:
 		self.settings = {

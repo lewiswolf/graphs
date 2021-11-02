@@ -21,3 +21,21 @@ jobs:
 
             - name: Test installation
               run: pip install "git+https://github.com/lewiswolf/graphs.git#egg=graphs"
+
+    type-check:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
+
+        steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: "3.9"
+
+            - name: Install packange and mypy
+              run: pip install "git+https://github.com/lewiswolf/graphs.git#egg=graphs" mypy
+
+            - name: Type check
+              run: mypy --config-file=test/test.cfg setup.py graphs test example

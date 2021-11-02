@@ -143,7 +143,6 @@ def polygonExample() -> None:
 	for i in range(len(polygons)):
 		for p in plots:
 			p.render(
-				# TO FIX: calling this _here_ produces a type error, as createFigure() is not yet an abstractmethod
 				p.createFigure(polygons[i]),
 				export_path=f'example/python/images/{p.__class__.__name__}-example-{i}',
 			)
