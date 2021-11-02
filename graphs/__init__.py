@@ -1,4 +1,4 @@
-from .graphs import GanttChart, PlotMatrix, PlotPolygon, PlotVertices
+from .graphs import GanttChart, PlotMatrix, PlotPolygon, PlotSpectrogram, PlotVertices, PlotWaveform
 
-__all__ = ['GanttChart', 'PlotMatrix', 'PlotPolygon', 'PlotVertices']
+__all__ = ['GanttChart', 'PlotMatrix', 'PlotPolygon', 'PlotSpectrogram', 'PlotVertices', 'PlotWaveform']
 __all__.append('types')
