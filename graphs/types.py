@@ -1,5 +1,4 @@
 # core
-from abc import ABC, abstractmethod
 import os
 import random
 from typing import Any, Callable, Literal, TypedDict
@@ -8,7 +7,7 @@ from typing import Any, Callable, Literal, TypedDict
 from plotly.graph_objects import Figure
 
 
-__all__ = ['Animation', 'Figure', 'GanttEvent', 'Graph', 'GraphSettings']
+__all__ = ['AnimationSettings', 'Figure', 'GanttEvent', 'Graph', 'GraphSettings']
 
 
 class GanttEvent(TypedDict, total=False):
@@ -23,6 +22,10 @@ class GanttEvent(TypedDict, total=False):
 	# optional
 	color: str						# color of event
 	reference: str					# name of group, to appear in key
+
+
+class AnimationSettings(TypedDict, total=False):
+	pass
 
 
 class GraphSettings(TypedDict, total=False):
@@ -49,18 +52,17 @@ class GraphSettings(TypedDict, total=False):
 		'',
 		'png',
 		'svg',
-		'mov',
 	]
 	# plotly config
 	config: dict[str, Any]		# a clone of the fig.show() parameter `config`
 
 
-class BaseGraph(ABC):
+class Graph():
 	'''
-	Base Graph defines the global methods used to handle/manipulate the settings object,
-	as well as any abstract methods.
+	This class is used by all static graphs.
 	'''
 
+	createFigure: Callable
 	settings: GraphSettings
 
 	def __init__(self) -> None:
@@ -88,27 +90,58 @@ class BaseGraph(ABC):
 			},
 		}
 
+	def applySettings(self, fig: Figure) -> Figure:
+		'''
+		This function is used to apply the global settings to a figure. It has been broken
+		out of the main render() method here, so that figures can be styled independtly
+		from it.
+		'''
+
+		# annotations
+		fig.update_annotations(
+			font={'color': self.settings['axis_color']},
+		)
+
+		# color bar
+		fig.update_coloraxes(
+			colorbar_tickfont_color=self.settings['axis_color'],
+			colorbar_title_font_color=self.settings['axis_color'],
+			colorbar_y=1.0,
+			colorbar_yanchor='top',
+			colorbar_ypad=0,
+			showscale=self.settings['show_colorbar'],
+		)
+
+		# layout
+		fig.update_layout(
+			font={
+				'family': self.settings["font_family"],
+				'size': self.settings['font_size'],
+			},
+			legend_font={'color': self.settings['axis_color']},
+			margin={'t': 5, 'r': 5, 'b': 5, 'l': 5},
+			paper_bgcolor='rgba(0, 0, 0, 0)',
+			plot_bgcolor=self.settings['bg_color'],
+		)
+
+		# axes
+		axes = {
+			'color': self.settings['axis_color'],
+			'gridcolor': self.settings['axis_color'] if self.settings['show_grid'] else 'rgba(0, 0, 0, 0)',
+			'linecolor': self.settings['axis_color'],
+			'zerolinecolor': self.settings['axis_color'] if self.settings['show_grid'] else 'rgba(0, 0, 0, 0)',
+			'zerolinewidth': 1,
+		}
+		fig.update_xaxes(**axes)
+		fig.update_yaxes(**axes)
+
+		return fig
+
 	def updateSettings(self, settings: GraphSettings) -> None:
 		'''
 		A type safe way to update self.settings.
 		'''
 		self.settings.update(settings)
-
-	@abstractmethod
-	def render(
-		self,
-		fig: Figure,
-		export_path: str = '',
-	) -> None:
-		pass
-
-
-class Graph(BaseGraph):
-	'''
-	This class is used by all static graphs, and includes a dedicated render method.
-	'''
-
-	createFigure: Callable
 
 	def render(
 		self,
@@ -129,38 +162,6 @@ class Graph(BaseGraph):
 			f'{os.getcwd()}/{export_path}.{self.settings["output_type"]}',
 		)
 
-		# apply global layout settings
-		fig.update_annotations(
-			font={'color': self.settings['axis_color']},
-		)
-		fig.update_coloraxes(
-			colorbar_tickfont_color=self.settings['axis_color'],
-			colorbar_title_font_color=self.settings['axis_color'],
-			colorbar_y=1.0,
-			colorbar_yanchor='top',
-			colorbar_ypad=0,
-			showscale=self.settings['show_colorbar'],
-		)
-		fig.update_layout(
-			font={
-				'family': self.settings["font_family"],
-				'size': self.settings['font_size'],
-			},
-			legend_font={'color': self.settings['axis_color']},
-			margin={'t': 5, 'r': 5, 'b': 5, 'l': 5},
-			paper_bgcolor='rgba(0, 0, 0, 0)',
-			plot_bgcolor=self.settings['bg_color'],
-		)
-		axes = {
-			'color': self.settings['axis_color'],
-			'gridcolor': self.settings['axis_color'] if self.settings['show_grid'] else 'rgba(0, 0, 0, 0)',
-			'linecolor': self.settings['axis_color'],
-			'zerolinecolor': self.settings['axis_color'] if self.settings['show_grid'] else 'rgba(0, 0, 0, 0)',
-			'zerolinewidth': 1,
-		}
-		fig.update_xaxes(**axes)
-		fig.update_yaxes(**axes)
-
 		# export both pngs and svgs
 		if self.settings['output_type'] == 'png' or self.settings['output_type'] == 'svg':
 			# make all images the same size
@@ -173,10 +174,6 @@ class Graph(BaseGraph):
 				font={'size': font},
 			)
 			fig.write_image(abs_path)
-
-		# handle video export
-		if self.settings['output_type'] == 'mov':
-			raise ValueError(f'Exporting this figure as a ".{self.settings["output_type"]}" is not supported.')
 
 		# handle simple implementation
 		if self.settings['output_type'] == '':
