@@ -62,7 +62,6 @@ class BaseGraph(ABC):
 	'''
 
 	settings: GraphSettings
-	createFigure: Callable
 
 	def __init__(self) -> None:
 		self.settings = {
@@ -72,7 +71,7 @@ class BaseGraph(ABC):
 			'color_map': 'Greens',
 			'content_color': '#1B9E31',
 			'emphasis_color': '#126B21',
-			'font_family': 'Computer Modern',
+			'font_family': 'CMU Serif',
 			'font_size': 18,
 			'show_colorbar': True,
 			'show_grid': True,
@@ -109,6 +108,8 @@ class Graph(BaseGraph):
 	This class is used by all static graphs, and includes a dedicated render method.
 	'''
 
+	createFigure: Callable
+
 	def render(
 		self,
 		fig: Figure,
@@ -142,8 +143,7 @@ class Graph(BaseGraph):
 		)
 		fig.update_layout(
 			font={
-				# TO FIX: Fonts not working properly with .svg.
-				'family': f'{self.settings["font_family"]}{".ttf" if self.settings["output_type"] == "svg" else ""}',
+				'family': self.settings["font_family"],
 				'size': self.settings['font_size'],
 			},
 			legend_font={'color': self.settings['axis_color']},
