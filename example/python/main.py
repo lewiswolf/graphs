@@ -252,38 +252,43 @@ def audioExample() -> None:
 
 def animationExample() -> None:
 	'''
+	An example that shows how to creata animations out of figures.
 	'''
 
 	from graphs.types import AnimationSettings, GraphSettings
 	from graphs import Animation, PlotMatrix
 
 	# Animations are special! They are not Graphs!
-	assert not isinstance(Animation(), T.Graph)
+	assert not isinstance(Animation, T.Graph)
 
 	# And similarly, they have their own settings.
 	a_settings: AnimationSettings = {
-		'output_type': 'mp4v',
+		'output_codec': 'avc1',
+		'output_container': 'mp4',
 	}
 	p_settings: GraphSettings = {
 		'show_colorbar': False,
 	}
 
-	# Animations work sympathetically with Graphs,
-	A = Animation(settings=a_settings)
+	# Animations instead work sympathetically with Graphs,
+	A = Animation(
+		export_path='example/python/videos/animation-example',
+		settings=a_settings,
+	)
 	p = PlotMatrix(settings=p_settings)
 
-	for i in range(10):
+	for i in range(100):
 		# such that each animation frame starts off as a Figure,
 		fig = p.createFigure(np.random.rand(100, 100))
 		A.createFrame(fig)
-	# before it is finally rendered
-	A.render(export_path='example/python/videos/animation-example')
+	# before it is finally rendered.
+	A.render()
 
 
 if __name__ == '__main__':
-	# ganntExample()
-	# matrixExample()
-	# polygonExample()
-	# audioExample()
+	ganntExample()
+	matrixExample()
+	polygonExample()
+	audioExample()
 	animationExample()
 	exit()

@@ -1,9 +1,9 @@
 # core
-import os
 import random
 
 # dependencies
 import cv2
+import numpy as np
 
 # lib
 from . import types as T
@@ -15,30 +15,57 @@ class Animation():
 	'''
 
 	# public
-	frame_count: int					# how many frames have been created
+	encoder: cv2.VideoWriter			# video encoder
+	export_path: str					# relative export path
 	id: str								# unique instance id
 	settings: T.AnimationSettings = {	# settings object
 		'fps': 10,
-		'frame_type': 'png',
 		'frame_size': 1200,
-		'output_type': 'mp4v',
+		'frame_type': 'png',
+		'output_codec': 'avc1',
+		'output_container': 'mp4',
 	}
 
-	# private
-	__tmp_dir: str = os.path.normpath(f'{os.path.dirname(__file__)}/../tmp')
+	def __init__(
+		self,
+		export_path: str = '',
+		settings: T.AnimationSettings = {},
+	) -> None:
+		'''
+		This init method first an instance of cv2.VideoWriter(), and confirms that
+		it is working correctly. As opposed to the Graph type, settings can only be
+		set when this class is instantiated. This is done to avoid settings conflicts
+		during the class lifecycle.
+		'''
 
-	def __init__(self, settings: T.AnimationSettings = {}) -> None:
-		'''
-		As opposed to the Graph type, settings can only set when this class is instantiated.
-		This is done to avoid settings conflicts during the class lifecycle.
-		'''
-		self.frame_count = 0
+		# initialise instance
 		self.id = f'{random.getrandbits(64):16x}'
 		if settings:
 			self.settings.update(settings)
 
+		# configure relative export path
+		if not export_path:
+			export_path = self.id
+		self.export_path = f'{export_path}.{self.settings["output_container"]}'
+
+		# initialise encoder
+		self.encoder = cv2.VideoWriter(
+			self.export_path,
+			cv2.VideoWriter_fourcc(*self.settings['output_codec']),
+			self.settings['fps'],
+			(self.settings['frame_size'], self.settings['frame_size']),
+		)
+
+		if not self.encoder.isOpened():
+			raise ValueError(
+				'Something went wrong when initialising the video encoder for your animation...\n'
+				'Perhaps it\'s the export path?',
+			)
+
 	def createFrame(self, fig: T.Figure) -> None:
 		'''
+		Each video frame is here generated using a Figure, by first conforming its
+		dimensions, and then converting it into a numpy array.
 		'''
 
 		# make all images the same size
@@ -51,34 +78,17 @@ class Animation():
 			font={'size': font},
 		)
 
-		# create image
-		fig.write_image(f'{self.__tmp_dir}/{self.id}-{"%08d" % (self.frame_count,)}.{self.settings["frame_type"]}')
-		self.frame_count += 1
-		del fig
-
-	def render(
-		self,
-		export_path: str = '',
-	) -> None:
-		'''
-		'''
-
-
-		if not export_path:
-			export_path = self.id
-		export_path = f'{export_path}.avi'
-
-		frames = sorted([f for f in os.listdir(self.__tmp_dir) if f.startswith(self.id)])
-		encoder = cv2.VideoWriter(
-			export_path,
-			cv2.VideoWriter_fourcc(*'MJPG'),
-			self.settings['fps'],
-			(self.settings['frame_size'], self.settings['frame_size']),
+		# append image to movie
+		self.encoder.write(
+			cv2.imdecode(np.frombuffer(
+				fig.to_image(format=self.settings['frame_type']),
+				np.uint8,
+			), 1),
 		)
 
-		for f in frames:
-			encoder.write(cv2.imread(f'{self.__tmp_dir}/{f}'))
-			os.remove(f'{self.__tmp_dir}/{f}')
+	def render(self) -> None:
+		'''
+		Finish writing the video file.
+		'''
 
-		self.frame_count = 0
-		encoder.release()
+		self.encoder.release()

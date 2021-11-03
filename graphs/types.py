@@ -25,22 +25,33 @@ class GanttEvent(TypedDict, total=False):
 
 
 class AnimationSettings(TypedDict, total=False):
+	'''
+	Type hints for the Animation settings. These are both used to set the
+	default class properties for a Animation, as well as specify the settings
+	for each instance.
+	'''
+
 	fps: float					# frames per second
 	frame_size: int				# maximum side length of a frame (px)
-	frame_type: Literal[		# what format is each frame stored as?
+	frame_type: Literal[		# what format is each frame rendered as?
 		'png',
 		'jpeg',
 	]
-	output_type: Literal[		# what format is exported?
+	output_codec: Literal[		# what is the video coded?
+		'avc1',
 		'mp4v',
+	]
+	output_container: Literal[	# what format is exported?
+		'mov',
+		'mp4',
 	]
 
 
 class GraphSettings(TypedDict, total=False):
 	'''
-	Type hints for the BaseGraph settings. These are both used to set
-	the default class properties for BaseGraph, as well as update the
-	settings for each instance.
+	Type hints for the Graph settings. These are both used to set the
+	default class properties for a Graph, as well as specify the settings
+	for each instance.
 	'''
 
 	# display options
@@ -149,6 +160,7 @@ class Graph():
 		'''
 		A type safe way to update self.settings.
 		'''
+
 		self.settings.update(settings)
 
 	def render(

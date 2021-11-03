@@ -33,7 +33,7 @@ After installing the dev-dependencies, you can run the python example using:
 pipenv run py
 ```
 
-## JS Example
+## JavaScript Example
 
 _not yet implemented_
 
