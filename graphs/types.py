@@ -25,7 +25,15 @@ class GanttEvent(TypedDict, total=False):
 
 
 class AnimationSettings(TypedDict, total=False):
-	pass
+	fps: float					# frames per second
+	frame_size: int				# maximum side length of a frame (px)
+	frame_type: Literal[		# what format is each frame stored as?
+		'png',
+		'jpeg',
+	]
+	output_type: Literal[		# what format is exported?
+		'mp4v',
+	]
 
 
 class GraphSettings(TypedDict, total=False):
@@ -158,7 +166,7 @@ class Graph():
 		# use default export path if a new one was not provided.
 		if not export_path:
 			export_path = self.settings['export_path']
-		abs_path = os.path.normpath(
+		export_path = os.path.normpath(
 			f'{os.getcwd()}/{export_path}.{self.settings["output_type"]}',
 		)
 
@@ -173,7 +181,7 @@ class Graph():
 				width=round(self.settings['image_size'] * (1.0 if width > height else width / height)),
 				font={'size': font},
 			)
-			fig.write_image(abs_path)
+			fig.write_image(export_path)
 
 		# handle simple implementation
 		if self.settings['output_type'] == '':

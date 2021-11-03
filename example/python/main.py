@@ -74,10 +74,15 @@ def ganntExample() -> None:
 	])
 	g.render(fig, export_path='example/python/images/gantt-example-1')
 
-	# To save loading a new instance in the event that the settings need to be changed, you can also simply call:
+	# To save loading a new instance in the event that the settings need to be changed, you can also simply use
 	g.updateSettings({'output_type': ''})
+	fig = g.createFigure([
+		{'event': 'test_1', 'start': (2019, 9, 13), 'end': (2019, 9, 15)},
+		{'event': 'test_2', 'start': (2019, 8, 9), 'end': (2019, 10, 11)},
+	])
+	# g.render(fig) # this will now display in your browser
 
-	# And for type safety, we can assume that all static graphs and figures are of the same type.
+	# And lastly, for type safety, we can assume that all static graphs and figures are of the same type.
 	assert isinstance(g, T.Graph)
 	assert isinstance(fig, T.Figure)
 
@@ -245,9 +250,40 @@ def audioExample() -> None:
 	)
 
 
+def animationExample() -> None:
+	'''
+	'''
+
+	from graphs.types import AnimationSettings, GraphSettings
+	from graphs import Animation, PlotMatrix
+
+	# Animations are special! They are not Graphs!
+	assert not isinstance(Animation(), T.Graph)
+
+	# And similarly, they have their own settings.
+	a_settings: AnimationSettings = {
+		'output_type': 'mp4v',
+	}
+	p_settings: GraphSettings = {
+		'show_colorbar': False,
+	}
+
+	# Animations work sympathetically with Graphs,
+	A = Animation(settings=a_settings)
+	p = PlotMatrix(settings=p_settings)
+
+	for i in range(10):
+		# such that each animation frame starts off as a Figure,
+		fig = p.createFigure(np.random.rand(100, 100))
+		A.createFrame(fig)
+	# before it is finally rendered
+	A.render(export_path='example/python/videos/animation-example')
+
+
 if __name__ == '__main__':
-	ganntExample()
-	matrixExample()
-	polygonExample()
-	audioExample()
+	# ganntExample()
+	# matrixExample()
+	# polygonExample()
+	# audioExample()
+	animationExample()
 	exit()
