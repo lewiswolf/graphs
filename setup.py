@@ -31,9 +31,10 @@ with codecs.open(os.path.join(this, 'Pipfile'), encoding='utf-8') as pf:
 			else:
 				b = False
 				continue
-		# append package names
+		# append package names with required version
 		if b:
-			packages.append(line.split()[0])
+			line = line.split()
+			packages.append(f'{line[0]}{line[2][1:-1] if line[2][1:-1] != "*" else ""}')
 
 setup(
 	name=name,
@@ -47,10 +48,13 @@ setup(
 	package_data={'graphs': ['py.typed']},
 	keywords=['graphs'],
 	classifiers=[
-		'Programming Language :: Python :: 3',
-		'Operating System :: Unix',
 		'Operating System :: MacOS :: MacOS X',
 		'Operating System :: Microsoft :: Windows',
+		'Operating System :: Unix',
+		'Programming Language :: Python :: 3',
+		'Programming Language :: Python :: 3 :: Only',
+		'Programming Language :: Python :: 3.9',
+		'Programming Language :: Python :: 3.10',
 		'Typing :: Typed',
 	],
 )
