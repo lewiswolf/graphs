@@ -1,5 +1,6 @@
-/.mypy_cache
-/graphs.egg-info
+.mypy_cache
+*.egg-info
+build
 node_modules
 unused
 
