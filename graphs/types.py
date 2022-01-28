@@ -34,8 +34,8 @@ class AnimationSettings(TypedDict, total=False):
 	fps: float					# frames per second
 	frame_size: int				# maximum side length of a frame (px)
 	frame_type: Literal[		# what format is each frame rendered as?
-		'png',
 		'jpeg',
+		'png',
 	]
 	output_codec: Literal[		# what is the video coded?
 		'avc1',
@@ -69,8 +69,10 @@ class GraphSettings(TypedDict, total=False):
 	image_size: int				# the length of the largest side of an exported image (pixels)
 	output_type: Literal[		# how is the graph rendered?
 		'',
+		'jpeg',
 		'png',
 		'svg',
+		'webp',
 	]
 	# plotly config
 	config: dict[str, Any]		# a clone of the fig.show() parameter `config`
@@ -183,7 +185,7 @@ class Graph():
 		)
 
 		# export both pngs and svgs
-		if self.settings['output_type'] == 'png' or self.settings['output_type'] == 'svg':
+		if self.settings['output_type'] != '':
 			# make all images the same size
 			height = fig.layout['height'] or 500
 			width = fig.layout['width'] or 700
@@ -196,5 +198,5 @@ class Graph():
 			fig.write_image(export_path)
 
 		# handle simple implementation
-		if self.settings['output_type'] == '':
+		else:
 			fig.show(config=self.settings['config'])
