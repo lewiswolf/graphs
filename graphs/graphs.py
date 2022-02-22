@@ -19,7 +19,7 @@ __all__ = ['GanttChart', 'PlotMatrix', 'PlotPolygon', 'PlotSpectrogram', 'PlotVe
 
 class GanttChart(T.Graph):
 	'''
-	Render a stylised plot of a Gannt chart.
+	Render a stylised plot of a Gantt chart.
 	'''
 
 	def __init__(self, events: Optional[list[T.GanttEvent]] = None, settings: T.GraphSettings = {}) -> None:

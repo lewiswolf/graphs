@@ -11,7 +11,7 @@ import torchaudio
 import graphs.types as T
 
 
-def ganntExample() -> None:
+def ganttExample() -> None:
 	'''
 	An example using the Gantt Chart. This little example also contains general info
 	about types and how to use T.Graphs.
@@ -19,21 +19,21 @@ def ganntExample() -> None:
 
 	from graphs import GanttChart
 
-	# Each Gantt chart event requires that we include a name, start date and end date. This will paint all Gantt events the
-	# same colour, as defined using the settings object.
+	# Each Gantt chart event requires that one include a name, start date and end date. This will paint
+	# all Gantt events the same colour, as defined using the settings object.
 	e: T.GanttEvent = {
 		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
 	}
-	# Alternatively, we can be explicit about our colours. This will produce a colour coded Gantt chart.
+	# Alternatively, one can be explicit about colour. This will produce a colour coded Gantt chart.
 	e = {
 		'event': 'test_1',
 		'start': (2019, 9, 13),
 		'end': (2019, 9, 15),
 		'color': 'red',
 	}
-	# And we can of course give these colours a key, which will be displayed to the side of the graph.
+	# And one can of course give these colours a key, which will be displayed to the side of the graph.
 	e = {
 		'event': 'test_1',
 		'start': (2019, 9, 13),
@@ -50,8 +50,8 @@ def ganntExample() -> None:
 	}
 	del e
 
-	# This packagae was designed to allow for each class to generate and export a graph upon instantiation.
-	# In this example, we load and display our data from `gantt.json`.
+	# This package was designed to allow for each class to generate and export a graph upon instantiation.
+	# In this example, data from `gantt.json` is loaded and displayed.
 	gantt_data = json.load(open(f'{os.getcwd()}/example/python/gantt.json', 'r'))
 	for obj in gantt_data:
 		obj['start'] = tuple(obj['start'])
@@ -74,15 +74,15 @@ def ganntExample() -> None:
 	])
 	g.render(fig, export_path='example/python/images/gantt-example-1')
 
-	# To save loading a new instance in the event that the settings need to be changed, you can also simply use
+	# To save loading a new instance, in the event that the settings need to be changed, one can also simply use
 	g.updateSettings({'output_type': ''})
 	fig = g.createFigure([
 		{'event': 'test_1', 'start': (2019, 9, 13), 'end': (2019, 9, 15)},
 		{'event': 'test_2', 'start': (2019, 8, 9), 'end': (2019, 10, 11)},
 	])
-	# g.render(fig) # this will now display in your browser
+	# g.render(fig) # this will now display in the browser
 
-	# And lastly, for type safety, we can assume that all static graphs and figures are of the same type.
+	# And lastly, for type safety, it can be assumed that all static graphs and figures are of the same type.
 	assert isinstance(g, T.Graph)
 	assert isinstance(fig, T.Figure)
 
@@ -139,12 +139,12 @@ def polygonExample() -> None:
 		]),
 	]
 
-	# In this example, we create two plots of a polygon, both with different looks and feels.
+	# In this example, two plots of a single polygon are created, both with different looks and feels.
 	plots = [PlotPolygon(), PlotVertices()]
 	for p in plots:
 		p.updateSettings({'output_type': 'png'})
 
-	# And now we simply loop over all the polygons we want to export.
+	# This is achieved by simply looping over all of the polygons.
 	for i in range(len(polygons)):
 		for p in plots:
 			p.render(
@@ -155,19 +155,18 @@ def polygonExample() -> None:
 
 def audioExample() -> None:
 	'''
-	An example of plotting audio data. Exemplefied here are the complex inputs needed
+	An example of plotting audio data. Exemplified here are the complex inputs needed
 	to represent audio data.
 	'''
 
 	from graphs import PlotSpectrogram, PlotWaveform
 
-	# sample rate in hz
-	sr = 44100
+	sr = 44100 # sample rate in hz
 
-	# create a one second long, 220hz sawtooth wave
+	# Create a one second long, 220hz sawtooth wave.
 	waveform = 2.0 * np.array([i % 1 for i in (220.0 * (np.arange(2 * sr) / sr))]) - 1.0
 
-	# create a one second long, sinusoidal sweep of the frequency spectrum
+	# Create a one second long, sinusoidal sweep of the frequency spectrum.
 	sweep = np.zeros(sr)
 	phi = 0.0
 	s_l = 1 / sr
@@ -181,7 +180,7 @@ def audioExample() -> None:
 
 	# Plotting the waveforms is as simple as any other plot...
 	p_w = PlotWaveform(settings={'show_grid': False, 'output_type': 'png'})
-	# and works fine with either a mono input
+	# and works fine with either a mono input...
 	p_w.render(
 		p_w.createFigure(waveform[0:500], sr=sr),
 		export_path='example/python/images/waveform-example-0',
@@ -195,7 +194,7 @@ def audioExample() -> None:
 		export_path='example/python/images/waveform-example-1',
 	)
 
-	# variables for the spectrograms
+	# Variables for the spectrograms.
 	p_s = PlotSpectrogram(
 		settings={
 			'output_type': 'png',
@@ -208,7 +207,7 @@ def audioExample() -> None:
 	n_mels = 64
 	window_length = 512
 
-	# create an fft soectrogram
+	# Create an FFT spectrogram.
 	fft = torchaudio.transforms.Spectrogram(
 		hop_length=hop_length,
 		n_fft=n_bins,
@@ -216,7 +215,7 @@ def audioExample() -> None:
 		win_length=window_length,
 	)(torch.as_tensor(sweep))
 
-	# create a mel spectrogram
+	# Create a mel spectrogram.
 	torch.set_default_dtype(torch.float64) # not my api 🤷
 	mel = torchaudio.transforms.MelSpectrogram(
 		f_min=f_min,
@@ -228,7 +227,7 @@ def audioExample() -> None:
 		win_length=window_length,
 	)(torch.as_tensor(sweep))
 
-	# plot both spectrograms
+	# Plot both spectrograms.
 	p_s.render(
 		p_s.createFigure(
 			fft.detach().numpy(),
@@ -252,7 +251,7 @@ def audioExample() -> None:
 
 def animationExample() -> None:
 	'''
-	An example that shows how to creata animations out of figures.
+	An example that shows how to create animations from multiple figures.
 	'''
 
 	from graphs.types import AnimationSettings, GraphSettings
@@ -286,7 +285,7 @@ def animationExample() -> None:
 
 
 if __name__ == '__main__':
-	ganntExample()
+	ganttExample()
 	matrixExample()
 	polygonExample()
 	audioExample()

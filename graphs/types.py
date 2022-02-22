@@ -27,7 +27,7 @@ class GanttEvent(TypedDict, total=False):
 class AnimationSettings(TypedDict, total=False):
 	'''
 	Type hints for the Animation settings. These are both used to set the
-	default class properties for a Animation, as well as specify the settings
+	default class properties for an Animation, as well as specify the settings
 	for each instance.
 	'''
 
@@ -114,7 +114,7 @@ class Graph():
 	def applySettings(self, fig: Figure) -> Figure:
 		'''
 		This function is used to apply the global settings to a figure. It has been broken
-		out of the main render() method here, so that figures can be styled independtly
+		out of the main render() method here, so that any figure can be styled independently
 		from it.
 		'''
 
@@ -172,8 +172,8 @@ class Graph():
 	) -> None:
 		'''
 		The global render method for each Graph. This was designed to be called with the export_path
-		variable, which allows one to call this using multiple paths without first calling updateSettings().
-		Given an input figure, this function will then apply the default layout parameters, and finally either
+		variable, which allows one to use multiple paths without first calling updateSettings(). Given
+		an input figure, this function will then apply the default layout parameters, and finally either
 		export the figure as an image, or display it in your favourite browser.
 		'''
 
@@ -184,7 +184,7 @@ class Graph():
 			f'{os.getcwd()}/{export_path}.{self.settings["output_type"]}',
 		)
 
-		# export both pngs and svgs
+		# export as an image
 		if self.settings['output_type'] != '':
 			# make all images the same size
 			height = fig.layout['height'] or 500
@@ -197,6 +197,6 @@ class Graph():
 			)
 			fig.write_image(export_path)
 
-		# handle simple implementation
+		# handle browser display
 		else:
 			fig.show(config=self.settings['config'])
