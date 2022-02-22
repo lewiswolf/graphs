@@ -32,9 +32,9 @@ class Animation():
 		settings: T.AnimationSettings = {},
 	) -> None:
 		'''
-		This init method first an instance of cv2.VideoWriter(), and confirms that
-		it is working correctly. As opposed to the Graph type, settings can only be
-		set when this class is instantiated. This is done to avoid settings conflicts
+		This init method first creates an instance of cv2.VideoWriter(), and confirms
+		that it is working correctly. As opposed to the Graph type, settings can only
+		be set when this class is instantiated. This is done to avoid settings conflicts
 		during the class lifecycle.
 		'''
 
