@@ -58,6 +58,7 @@ class GraphSettings(TypedDict, total=False):
 	axis_color: str				# what is the global axis color?
 	bg_color: str				# background color of the plot
 	color_map: str				# default color map (see plotly.colors)
+	colorbar_horizontal: bool	# is the colourbar horizontal? else vertical (only affects PlotMatrix())
 	content_color: str			# default color used for a graph (hex eg. '#ffffff')
 	emphasis_color: str			# secondary color used for accenting (hex eg. '#ffffff')
 	font_family: str			# Which font family?
@@ -92,6 +93,7 @@ class Graph():
 			'axis_color': '#000000',
 			'bg_color': 'rgba(0, 0, 0, 0)',
 			'color_map': 'Greens',
+			'colorbar_horizontal': False,
 			'content_color': '#1B9E31',
 			'emphasis_color': '#126B21',
 			'font_family': 'CMU Serif',
@@ -127,8 +129,6 @@ class Graph():
 		fig.update_coloraxes(
 			colorbar_tickfont_color=self.settings['axis_color'],
 			colorbar_title_font_color=self.settings['axis_color'],
-			colorbar_y=1.0,
-			colorbar_yanchor='top',
 			colorbar_ypad=0,
 			showscale=self.settings['show_colorbar'],
 		)

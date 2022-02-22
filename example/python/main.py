@@ -96,7 +96,7 @@ def matrixExample() -> None:
 	from graphs import PlotMatrix
 
 	# PlotMatrix is designed to recognise the dimensionality of its input, and plot the respective matrix accordingly.
-	p = PlotMatrix(settings={'show_colorbar': True, 'output_type': 'png'})
+	p = PlotMatrix(settings={'output_type': 'png'})
 	# As a result of this, it is just as easy to plot a 1D matrix...
 	p.render(
 		p.createFigure(np.random.rand(200)),

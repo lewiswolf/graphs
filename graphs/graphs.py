@@ -141,12 +141,29 @@ class PlotMatrix(T.Graph):
 		)
 
 		# configure axes and scale if dim == 1
+		height = 550 if dim == 1 else (550 * (m.shape[0] / max(*m.shape)))
+		width = 700 if dim == 1 else (550 * (m.shape[1] / max(*m.shape)))
+		if self.settings['show_colorbar']:
+			if self.settings['colorbar_horizontal']:
+				height += 150
+			else:
+				width += 150
+
 		fig.update_layout(
-			height=550 if dim == 1 else 550 * (m.shape[0] / max(*m.shape)),
-			width=(700 if dim == 1 else 550 * (m.shape[1] / max(*m.shape))) + (150 if self.settings['show_colorbar'] else 0),
+			height=height,
+			width=width,
 		)
-		# TO FIX: The 1D graph does not look great, as plotly does not currently support a horizontal colorbar.
-		fig.update_coloraxes(colorbar_len=1)
+		fig.update_coloraxes(
+			colorbar_len=1.0,
+			**{
+				'colorbar_orientation': 'h',
+				'colorbar_y': 0.0,
+				'colorbar_yanchor': 'bottom',
+			} if self.settings['colorbar_horizontal'] else {
+				'colorbar_y': 1.0,
+				'colorbar_yanchor': 'top',
+			},
+		)
 		fig.update_xaxes(showticklabels=False, **{'scaleratio': (700 / 550) * 1 / m.shape[1]} if dim == 1 else {})
 		fig.update_yaxes(showticklabels=False, **{'scaleratio': m.shape[1]} if dim == 1 else {})
 		return self.applySettings(fig)
@@ -274,6 +291,8 @@ class PlotSpectrogram(T.Graph):
 			colorbar_len=1.064,
 			colorbar_title='Power',
 			colorbar_title_side='bottom',
+			colorbar_y=1.0,
+			colorbar_yanchor='top',
 		)
 		# TO FIX: lengths of x axes are inconsistent when input_type is changed
 		fig.update_xaxes(
