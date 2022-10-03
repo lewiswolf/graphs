@@ -14,7 +14,15 @@ from plotly.subplots import make_subplots	# subplot support
 # lib
 from . import types as T
 from . import utils
-__all__ = ['GanttChart', 'PlotMatrix', 'PlotPolygon', 'PlotSpectrogram', 'PlotVertices', 'PlotWaveform']
+__all__ = [
+	'GanttChart',
+	'PlotCircle',
+	'PlotMatrix',
+	'PlotPolygon',
+	'PlotSpectrogram',
+	'PlotVertices',
+	'PlotWaveform',
+]
 
 
 class GanttChart(T.Graph):
@@ -95,6 +103,55 @@ class GanttChart(T.Graph):
 		# configure layout
 		fig.update_layout(legend_title_text='', showlegend=show_legend, width=(900 if show_legend else 700))
 		fig.update_yaxes(autorange='reversed', title_text='')
+		return self.applySettings(fig)
+
+
+class PlotCircle(T.Graph):
+	'''
+	Render a stylised plot of a circle.
+	'''
+
+	def __init__(self, diameter: float, settings: T.GraphSettings = {}) -> None:
+		'''
+		Uniquely typed init method.
+		'''
+
+		super().__init__()
+		if settings:
+			self.updateSettings(settings)
+		if diameter is not None:
+			self.render(self.createFigure(diameter))
+
+	def createFigure(self, diameter: float) -> T.Figure:
+		'''
+		A given matrix is plotted using px.imshow. If the matrix is 1D, the graph is scaled using
+		custom x and y axis ranges. If the matrix is 2D, its aspect ratio is preserved.
+		'''
+
+		radius = diameter / 2.
+
+		fig = go.Figure(layout={
+			'height': 700,
+			'width': 700,
+			'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+			'shapes': [{
+				'fillcolor': self.settings['content_color'],
+				'line_color': self.settings['emphasis_color'],
+				'type': 'circle',
+				'x0': -radius,
+				'y0': -radius,
+				'x1': radius,
+				'y1': radius,
+				'xref': 'x',
+				'yref': 'y',
+			}],
+		})
+
+		# configure layout
+		v_max = max(radius, 1.) + 0.02
+		v_min = v_max * -1.
+		fig.update_xaxes(range=[v_min, v_max])
+		fig.update_yaxes(range=[v_min, v_max])
 		return self.applySettings(fig)
 
 
