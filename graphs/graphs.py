@@ -111,7 +111,7 @@ class PlotCircle(T.Graph):
 	Render a stylised plot of a circle.
 	'''
 
-	def __init__(self, diameter: float, settings: T.GraphSettings = {}) -> None:
+	def __init__(self, diameter: Optional[float] = None, settings: T.GraphSettings = {}) -> None:
 		'''
 		Uniquely typed init method.
 		'''
