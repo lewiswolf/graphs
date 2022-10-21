@@ -21,4 +21,4 @@ python_version = "3.9"
 
 [scripts]
 start = "python example/example.py"
-test = "sh bin/test.sh"
+test = "sh testtest.sh"
