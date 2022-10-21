@@ -6,7 +6,7 @@ from setuptools import setup
 this = os.path.abspath(os.path.dirname(__file__))
 name = 'graphs'
 version = '0.0.1'
-short_description = 'Graphs in Python. Graphs in JavaScript. Graphs in LaTeX.'
+short_description = 'Graphs when I need them.'
 
 # import long description from readme.md
 with codecs.open(os.path.join(this, 'readme.md'), encoding='utf-8') as readme:
@@ -34,8 +34,8 @@ with codecs.open(os.path.join(this, 'Pipfile'), encoding='utf-8') as raw_pipfile
 				continue
 		# append package names with required version
 		if is_pkg:
-			line_arr = line.split()
-			packages.append(f'{line_arr[0]}{line_arr[2][1:-1] if line_arr[2][1:-1] != "*" else ""}')
+			pkg_name, _, *spec = line.split()
+			packages.append(pkg_name if spec[0] == '"*"' else f'{pkg_name}{spec[0][1:-1]}')
 
 setup(
 	name=name,

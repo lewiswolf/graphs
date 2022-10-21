@@ -4,25 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-kaleido = ">=0.2"
-numpy = ">=1.22"
-opencv-python = ">=4.5"
-pandas = ">=1.4"
-plotly = ">=5.6"
+bokeh = ">=2.4"
+chromedriver-binary-auto = "*"
+numpy = ">=1.23"
+selenium = ">=4.5"
+opencv-python = "*"
 
 [dev-packages]
 flake8 = "*"
 flake8-commas = "*"
 graphs = {editable = true, path = "."}
 mypy = "*"
-torch = "*"
-torchaudio = "*"
 
 [requires]
 python_version = "3.9"
 
 [scripts]
-install-dev = "sh bin/install-dev.sh"
-js = "sh bin/runjs.sh"
-py = "python example/python/main.py"
+start = "python example/example.py"
 test = "sh bin/test.sh"

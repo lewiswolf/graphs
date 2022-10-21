@@ -1,4 +1,4 @@
-Graphs in Python. Graphs in JavaScript. Graphs in LaTeX.
+Graphs when I need them.
 
 ## Dependencies
 
@@ -6,7 +6,6 @@ Graphs in Python. Graphs in JavaScript. Graphs in LaTeX.
 
 ## Dev-Dependencies
 
--   [NodeJS](https://formulae.brew.sh/formula/node)
 -   [pipenv](https://formulae.brew.sh/formula/pipenv#default)
 
 ## Install
@@ -18,7 +17,7 @@ pip install "git+https://github.com/lewiswolf/graphs.git#egg=graphs"
 or clone this repo and install/test it locally using:
 
 ```bash
-pipenv run install-dev
+pipenv install -d
 ```
 
 ## General API
@@ -32,15 +31,3 @@ After installing the dev-dependencies, you can run the python example using:
 ```bash
 pipenv run py
 ```
-
-## JavaScript Example
-
-_not yet implemented_
-
-```bash
-pipenv run js
-```
-
-## LaTeX Example
-
-_not yet implemented_

@@ -1,8 +1,9 @@
+# foldes
 .mypy_cache
 *.egg-info
 build
-node_modules
 unused
 
+# files
 .DS_Store
 Pipfile.lock
