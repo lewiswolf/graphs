@@ -22,7 +22,5 @@ torchaudio = "*"
 python_version = "3.9"
 
 [scripts]
-install-dev = "sh bin/install-dev.sh"
-js = "sh bin/runjs.sh"
-py = "python example/python/main.py"
+start = "python example/main.py"
 test = "sh bin/test.sh"
