@@ -19,6 +19,7 @@ __all__ = [
 	'PlotCircle',
 	'PlotMatrix',
 	'PlotPolygon',
+	'PlotRectangle',
 	'PlotSpectrogram',
 	'PlotVertices',
 	'PlotWaveform',
@@ -124,8 +125,7 @@ class PlotCircle(T.Graph):
 
 	def createFigure(self, diameter: float) -> T.Figure:
 		'''
-		A given matrix is plotted using px.imshow. If the matrix is 1D, the graph is scaled using
-		custom x and y axis ranges. If the matrix is 2D, its aspect ratio is preserved.
+		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
 
 		radius = diameter / 2.
@@ -271,6 +271,61 @@ class PlotPolygon(T.Graph):
 		v_min, v_max = np.min(vertices) - 0.01, np.max(vertices) + 0.01
 		fig.update_xaxes(range=[v_min, v_max], showgrid=False, showticklabels=False, visible=False)
 		fig.update_yaxes(range=[v_min, v_max], showgrid=False, showticklabels=False, visible=False)
+		return self.applySettings(fig)
+
+
+class PlotRectangle(T.Graph):
+	'''
+	Render a stylised plot of a rectangle.
+	'''
+
+	def __init__(
+		self,
+		unit_length: Optional[float] = None,
+		aspect_ratio: Optional[float] = None,
+		settings: T.GraphSettings = {},
+	) -> None:
+		'''
+		Uniquely typed init method.
+		'''
+
+		super().__init__()
+		if settings:
+			self.updateSettings(settings)
+		if unit_length is not None and aspect_ratio is not None:
+			self.render(self.createFigure(unit_length, aspect_ratio))
+
+	def createFigure(self, unit_length: float, aspect_ratio: float) -> T.Figure:
+		'''
+		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
+		'''
+
+		unit_length /= 2
+		x = unit_length * aspect_ratio
+		y = unit_length / aspect_ratio
+
+		fig = go.Figure(layout={
+			'height': 700,
+			'width': 700,
+			'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+			'shapes': [{
+				'fillcolor': self.settings['content_color'],
+				'line_color': self.settings['emphasis_color'],
+				'type': 'rect',
+				'x0': -1 * x,
+				'y0': -1 * y,
+				'x1': x,
+				'y1': y,
+				'xref': 'x',
+				'yref': 'y',
+			}],
+		})
+
+		# configure layout
+		v_max = max(x, 1.)
+		v_min = v_max * -1.
+		fig.update_xaxes(range=[v_min, v_max])
+		fig.update_yaxes(range=[v_min, v_max])
 		return self.applySettings(fig)
 
 

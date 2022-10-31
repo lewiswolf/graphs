@@ -3,9 +3,9 @@ import json
 import os
 
 # dependencies
-import numpy as np
-import torch
-import torchaudio
+# import numpy as np
+# import torch
+# import torchaudio
 
 # lib
 import graphs.types as T
@@ -285,9 +285,16 @@ def animationExample() -> None:
 
 
 if __name__ == '__main__':
-	ganttExample()
-	matrixExample()
-	polygonExample()
-	audioExample()
-	animationExample()
+	# ganttExample()
+	# matrixExample()
+	# polygonExample()
+	# audioExample()
+	# animationExample()
+
+	from graphs import PlotRectangle
+
+	PlotRectangle(1., 1.)
+	PlotRectangle(2., 1.2)
+	PlotRectangle(3., 5.2)
+
 	exit()
