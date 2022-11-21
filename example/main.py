@@ -52,7 +52,7 @@ def ganttExample() -> None:
 
 	# This package was designed to allow for each class to generate and export a graph upon instantiation.
 	# In this example, data from `gantt.json` is loaded and displayed.
-	gantt_data = json.load(open(f'{os.getcwd()}/example/python/gantt.json', 'r'))
+	gantt_data = json.load(open(f'{os.getcwd()}/example/gantt.json', 'r'))
 	for obj in gantt_data:
 		obj['start'] = tuple(obj['start'])
 		obj['end'] = tuple(obj['end'])
@@ -60,7 +60,7 @@ def ganttExample() -> None:
 	GanttChart(
 		gantt_data,
 		settings={
-			'export_path': 'example/python/images/gantt-example-0',
+			'export_path': 'example/images/gantt-example-0',
 			'output_type': 'png',
 		},
 	)
@@ -72,7 +72,7 @@ def ganttExample() -> None:
 		{'event': 'test_1', 'start': (2019, 9, 13), 'end': (2019, 9, 15)},
 		{'event': 'test_2', 'start': (2019, 8, 9), 'end': (2019, 10, 11)},
 	])
-	g.render(fig, export_path='example/python/images/gantt-example-1')
+	g.render(fig, export_path='example/images/gantt-example-1')
 
 	# To save loading a new instance, in the event that the settings need to be changed, one can also simply use
 	g.updateSettings({'output_type': ''})
@@ -100,20 +100,20 @@ def matrixExample() -> None:
 	# As a result of this, it is just as easy to plot a 1D matrix...
 	p.render(
 		p.createFigure(np.random.rand(200)),
-		export_path='example/python/images/1d-matrix-example',
+		export_path='example/images/1d-matrix-example',
 	)
 	# as it is to plot a 2D matrix.
 	p.render(
 		p.createFigure(np.random.rand(100, 100)),
-		export_path='example/python/images/2d-matrix-example-0',
+		export_path='example/images/2d-matrix-example-0',
 	)
 	p.render(
 		p.createFigure(np.random.rand(10, 10).reshape(20, 5)),
-		export_path='example/python/images/2d-matrix-example-1',
+		export_path='example/images/2d-matrix-example-1',
 	)
 	p.render(
 		p.createFigure(np.random.rand(10, 10).reshape(5, 20)),
-		export_path='example/python/images/2d-matrix-example-2',
+		export_path='example/images/2d-matrix-example-2',
 	)
 
 
@@ -149,7 +149,7 @@ def polygonExample() -> None:
 		for p in plots:
 			p.render(
 				p.createFigure(polygons[i]),
-				export_path=f'example/python/images/{p.__class__.__name__}-example-{i}',
+				export_path=f'example/images/{p.__class__.__name__}-example-{i}',
 			)
 
 
@@ -183,7 +183,7 @@ def audioExample() -> None:
 	# and works fine with either a mono input...
 	p_w.render(
 		p_w.createFigure(waveform[0:500], sr=sr),
-		export_path='example/python/images/waveform-example-0',
+		export_path='example/images/waveform-example-0',
 	)
 	# or a multichannel input.
 	p_w.render(
@@ -191,7 +191,7 @@ def audioExample() -> None:
 			sweep[0: 8000],
 			sweep[0: 8000],
 		])),
-		export_path='example/python/images/waveform-example-1',
+		export_path='example/images/waveform-example-1',
 	)
 
 	# Variables for the spectrograms.
@@ -235,7 +235,7 @@ def audioExample() -> None:
 			input_type='fft',
 			sr=sr,
 		),
-		export_path='example/python/images/spectrogram-fft-example',
+		export_path='example/images/spectrogram-fft-example',
 	)
 	p_s.render(
 		p_s.createFigure(
@@ -245,7 +245,7 @@ def audioExample() -> None:
 			input_type='mel',
 			sr=sr,
 		),
-		export_path='example/python/images/spectrogram-mel-example',
+		export_path='example/images/spectrogram-mel-example',
 	)
 
 
@@ -271,7 +271,7 @@ def animationExample() -> None:
 
 	# Animations instead work sympathetically with Graphs,
 	A = Animation(
-		export_path='example/python/videos/animation-example',
+		export_path='example/videos/animation-example',
 		settings=a_settings,
 	)
 	p = PlotMatrix(settings=p_settings)
@@ -284,11 +284,41 @@ def animationExample() -> None:
 	A.render()
 
 
+def shapeExample() -> None:
+	'''
+	An example that shows how to create plots of sqaures and rectangles.
+	'''
+
+	from graphs import PlotCircle, PlotRectangle
+
+	# Circles are fairly simple to plot, and are described using only a diameter.
+	p_c = PlotCircle(settings={'output_type': 'png'})
+	p_c.render(
+		p_c.createFigure(1.),
+		export_path='example/images/circle-example-0',
+	)
+	# Rectangles are similarly simple, but take two arguments - the size and the aspect ratio.
+	p_r = PlotRectangle(settings={'output_type': 'png'})
+	p_r.render(
+		p_r.createFigure(1., 1.5),
+		export_path='example/images/rectangle-example-0',
+	)
+	# Unlike other plots, rectangles and circles have an optional argument which can be used to set a fixed axis maximum.
+	p_c.render(
+		p_c.createFigure(1., axis_maximum=2.),
+		export_path='example/images/circle-example-1',
+	)
+	p_r.render(
+		p_r.createFigure(1., 1.5, axis_maximum=2.),
+		export_path='example/images/rectangle-example-1',
+	)
+
+
 if __name__ == '__main__':
 	ganttExample()
 	matrixExample()
 	polygonExample()
 	audioExample()
 	animationExample()
-
+	shapeExample()
 	exit()

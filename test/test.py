@@ -16,9 +16,9 @@ class UtilsTests(unittest.TestCase):
 		self.assertEqual(rgbToHex('rgb(0, 0, 0)'), '#000000')
 		self.assertEqual(rgbToHex((134, 235, 135)), '#86eb87')
 		self.assertEqual(rgbToHex('rgb(134, 235, 135)'), '#86eb87')
-
 		# test cmap with Viridis...
 
 
 if __name__ == '__main__':
-	exit(unittest.main())
+	unittest.main()
+	exit()

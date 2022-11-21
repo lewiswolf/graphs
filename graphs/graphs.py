@@ -123,7 +123,7 @@ class PlotCircle(T.Graph):
 		if diameter is not None:
 			self.render(self.createFigure(diameter))
 
-	def createFigure(self, diameter: float) -> T.Figure:
+	def createFigure(self, diameter: float, axis_maximum: Optional[float] = None) -> T.Figure:
 		'''
 		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
@@ -148,7 +148,8 @@ class PlotCircle(T.Graph):
 		})
 
 		# configure layout
-		v_max = max(radius, 1.) + 0.02
+		v_max = max(max(radius, 1.), axis_maximum) if axis_maximum is not None else max(radius, 1.)
+		v_max += 0.02
 		v_min = v_max * -1.
 		fig.update_xaxes(range=[v_min, v_max])
 		fig.update_yaxes(range=[v_min, v_max])
@@ -295,7 +296,7 @@ class PlotRectangle(T.Graph):
 		if unit_length is not None and aspect_ratio is not None:
 			self.render(self.createFigure(unit_length, aspect_ratio))
 
-	def createFigure(self, unit_length: float, aspect_ratio: float) -> T.Figure:
+	def createFigure(self, unit_length: float, aspect_ratio: float, axis_maximum: Optional[float] = None) -> T.Figure:
 		'''
 		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
@@ -322,7 +323,8 @@ class PlotRectangle(T.Graph):
 		})
 
 		# configure layout
-		v_max = max(x, 1.)
+		v_max = max(max(x, 1.), axis_maximum) if axis_maximum is not None else max(x, 1.)
+		v_max += 0.02
 		v_min = v_max * -1.
 		fig.update_xaxes(range=[v_min, v_max])
 		fig.update_yaxes(range=[v_min, v_max])
