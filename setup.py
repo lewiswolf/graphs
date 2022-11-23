@@ -5,7 +5,7 @@ from setuptools import setup
 
 this = os.path.abspath(os.path.dirname(__file__))
 name = 'graphs'
-version = '0.0.1'
+version = '0.1.0'
 short_description = 'Graphs in Python. Graphs in JavaScript. Graphs in LaTeX.'
 
 # import long description from readme.md
