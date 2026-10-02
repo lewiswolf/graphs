@@ -107,12 +107,12 @@ class GanttChart(T.Graph):
 		return self.applySettings(fig)
 
 
-class PlotCircle(T.Graph):
+class PlotEllipse(T.Graph):
 	'''
-	Render a stylised plot of a circle.
+	Render a stylised plot of a ellipse.
 	'''
 
-	def __init__(self, diameter: Optional[float] = None, settings: T.GraphSettings = {}) -> None:
+	def __init__(self, major: Optional[float] = None, minor: Optional[float] = None, settings: T.GraphSettings = {}) -> None:
 		'''
 		Uniquely typed init method.
 		'''
@@ -120,15 +120,14 @@ class PlotCircle(T.Graph):
 		super().__init__()
 		if settings:
 			self.updateSettings(settings)
-		if diameter is not None:
-			self.render(self.createFigure(diameter))
+		if major is not None and minor is not None:
+			self.render(self.createFigure(major, minor))
 
-	def createFigure(self, diameter: float, axis_maximum: Optional[float] = None) -> T.Figure:
+	def createFigure(self, major: float, minor: float, axis_maximum: Optional[float] = None) -> T.Figure:
 		'''
 		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
 
-		radius = diameter / 2.
 
 		fig = go.Figure(layout={
 			'height': 700,
@@ -138,17 +137,17 @@ class PlotCircle(T.Graph):
 				'fillcolor': self.settings['content_color'],
 				'line_color': self.settings['emphasis_color'],
 				'type': 'circle',
-				'x0': -radius,
-				'y0': -radius,
-				'x1': radius,
-				'y1': radius,
+				'x0': -(major / 2),
+				'y0': -(minor / 2),
+				'x1': major / 2,
+				'y1': minor / 2 ,
 				'xref': 'x',
 				'yref': 'y',
 			}],
 		})
 
 		# configure layout
-		v_max = max(max(radius, 1.), axis_maximum) if axis_maximum is not None else max(radius, 1.)
+		v_max = max(max(major, 1.), axis_maximum) if axis_maximum is not None else max(major, 1.)
 		v_max += 0.02
 		v_min = v_max * -1.
 		fig.update_xaxes(range=[v_min, v_max])
