@@ -1,7 +1,7 @@
 from .animation import Animation
 from .graphs import (
 	GanttChart,
-	PlotCircle,
+	PlotEllipse,
 	PlotMatrix,
 	PlotPolygon,
 	PlotRectangle,
@@ -13,7 +13,7 @@ from .graphs import (
 __all__ = [
 	'Animation',
 	'GanttChart',
-	'PlotCircle',
+	'PlotEllipse',
 	'PlotMatrix',
 	'PlotPolygon',
 	'PlotRectangle',

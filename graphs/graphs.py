@@ -16,7 +16,7 @@ from . import types as T
 from . import utils
 __all__ = [
 	'GanttChart',
-	'PlotCircle',
+	'PlotEllipse',
 	'PlotMatrix',
 	'PlotPolygon',
 	'PlotRectangle',
