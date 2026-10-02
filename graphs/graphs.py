@@ -133,6 +133,8 @@ class PlotEllipse(T.Graph):
 		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
 
+		major_radius = major / 2.
+		minor_radius = minor / 2.
 		fig = go.Figure(layout={
 			'height': 700,
 			'width': 700,
@@ -141,21 +143,22 @@ class PlotEllipse(T.Graph):
 				'fillcolor': self.settings['content_color'],
 				'line_color': self.settings['emphasis_color'],
 				'type': 'circle',
-				'x0': -(major / 2.),
-				'y0': -(minor / 2.),
-				'x1': major / 2.,
-				'y1': minor / 2.,
+				'x0': -major_radius,
+				'y0': -minor_radius,
+				'x1': major_radius,
+				'y1': minor_radius,
 				'xref': 'x',
 				'yref': 'y',
 			}],
 		})
 
 		# configure layout
-		v_max = max(max(major, 1.), axis_maximum) if axis_maximum is not None else max(major, 1.)
+		v_max = max(major_radius, minor_radius, 1.)
+		if axis_maximum is not None:
+			v_max = max(v_max, axis_maximum)
 		v_max += 0.02
-		v_min = v_max * -1.
-		fig.update_xaxes(range=[v_min, v_max])
-		fig.update_yaxes(range=[v_min, v_max])
+		fig.update_xaxes(range=[-v_max, v_max])
+		fig.update_yaxes(range=[-v_max, v_max])
 		return self.applySettings(fig)
 
 
