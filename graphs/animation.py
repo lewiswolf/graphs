@@ -51,7 +51,7 @@ class Animation():
 		# initialise encoder
 		self.encoder = cv2.VideoWriter(
 			self.export_path,
-			cv2.VideoWriter_fourcc(*self.settings['output_codec']),
+			cv2.VideoWriter.fourcc(*self.settings['output_codec']),
 			self.settings['fps'],
 			(self.settings['frame_size'], self.settings['frame_size']),
 		)
@@ -79,12 +79,13 @@ class Animation():
 		)
 
 		# append image to movie
-		self.encoder.write(
-			cv2.imdecode(np.frombuffer(
-				fig.to_image(format=self.settings['frame_type']),
-				np.uint8,
-			), 1),
-		)
+		frame = cv2.imdecode(np.frombuffer(
+			fig.to_image(format=self.settings['frame_type']),
+			np.uint8,
+		), 1)
+		if frame is None:
+			raise ValueError('Something went wrong when decoding the animation frame.')
+		self.encoder.write(frame)
 
 	def render(self) -> None:
 		'''

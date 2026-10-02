@@ -51,6 +51,6 @@ def getContinuousColor(colorscale: list[list[int]], intermed: float) -> str:
 
 
 def rgbToHex(rgb: Union[str, tuple[int, int, int]]) -> str:
-	if type(rgb) == str:
+	if isinstance(rgb, str):
 		rgb = eval(rgb.replace('rgb', ''))
 	return f'#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}'

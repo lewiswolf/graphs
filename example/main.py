@@ -289,13 +289,20 @@ def shapeExample() -> None:
 	An example that shows how to create plots of sqaures and rectangles.
 	'''
 
-	from graphs import PlotCircle, PlotRectangle
+	from graphs import PlotEllipse, PlotRectangle
 
 	# Circles are fairly simple to plot, and are described using only a diameter.
-	p_c = PlotCircle(settings={'output_type': 'png'})
-	p_c.render(
-		p_c.createFigure(1.),
+	p_e = PlotEllipse(settings={'output_type': 'png'})
+	p_e.render(
+		p_e.createFigure(1., 1.),
 		export_path='example/images/circle-example-0',
+	)
+
+	# Circles are fairly simple to plot, and are described using only a diameter.
+	p_e = PlotEllipse(settings={'output_type': 'png'})
+	p_e.render(
+		p_e.createFigure(1., 0.5),
+		export_path='example/images/ellipse-example-0',
 	)
 	# Rectangles are similarly simple, but take two arguments - the size and the aspect ratio.
 	p_r = PlotRectangle(settings={'output_type': 'png'})
@@ -304,8 +311,8 @@ def shapeExample() -> None:
 		export_path='example/images/rectangle-example-0',
 	)
 	# Unlike other plots, rectangles and circles have an optional argument which can be used to set a fixed axis maximum.
-	p_c.render(
-		p_c.createFigure(1., axis_maximum=2.),
+	p_e.render(
+		p_e.createFigure(1., 1., axis_maximum=2.),
 		export_path='example/images/circle-example-1',
 	)
 	p_r.render(

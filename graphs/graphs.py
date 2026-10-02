@@ -112,7 +112,12 @@ class PlotEllipse(T.Graph):
 	Render a stylised plot of a ellipse.
 	'''
 
-	def __init__(self, major: Optional[float] = None, minor: Optional[float] = None, settings: T.GraphSettings = {}) -> None:
+	def __init__(
+		self,
+		major: Optional[float] = None,
+		minor: Optional[float] = None,
+		settings: T.GraphSettings = {},
+	) -> None:
 		'''
 		Uniquely typed init method.
 		'''
@@ -128,7 +133,6 @@ class PlotEllipse(T.Graph):
 		A circle is drawn at the origin using the inbuilt plotly 'shapes' property.
 		'''
 
-
 		fig = go.Figure(layout={
 			'height': 700,
 			'width': 700,
@@ -137,10 +141,10 @@ class PlotEllipse(T.Graph):
 				'fillcolor': self.settings['content_color'],
 				'line_color': self.settings['emphasis_color'],
 				'type': 'circle',
-				'x0': -(major / 2),
-				'y0': -(minor / 2),
-				'x1': major / 2,
-				'y1': minor / 2 ,
+				'x0': -(major / 2.),
+				'y0': -(minor / 2.),
+				'x1': major / 2.,
+				'y1': minor / 2.,
 				'xref': 'x',
 				'yref': 'y',
 			}],

@@ -19,7 +19,7 @@ torch = "*"
 torchaudio = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.14"
 
 [scripts]
 start = "python example/main.py"
